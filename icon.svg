@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f3448"/>
+      <stop offset="1" stop-color="#1c1f2c"/>
+    </linearGradient>
+    <radialGradient id="fur" cx="0.45" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#f5a650"/>
+      <stop offset="1" stop-color="#e2852e"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- shirt -->
+  <path d="M96 512 C108 430 170 398 256 398 C342 398 404 430 416 512 Z" fill="#3a3f52"/>
+  <path d="M238 402 L274 402 L268 512 L244 512 Z" fill="#ffb43a"/>
+  <!-- ears -->
+  <path d="M120 236 L136 92 Q142 74 158 84 L250 156 Z" fill="#e2852e"/>
+  <path d="M392 236 L376 92 Q370 74 354 84 L262 156 Z" fill="#e2852e"/>
+  <path d="M146 196 L156 116 L222 166 Z" fill="#f4b2bf"/>
+  <path d="M366 196 L356 116 L290 166 Z" fill="#f4b2bf"/>
+  <!-- head -->
+  <ellipse cx="256" cy="276" rx="168" ry="148" fill="url(#fur)"/>
+  <!-- forehead stripes -->
+  <path d="M256 136 Q248 168 256 196 Q264 168 256 136 Z" fill="#c4641c"/>
+  <path d="M212 142 Q210 170 224 192 Q226 166 212 142 Z" fill="#c4641c"/>
+  <path d="M300 142 Q302 170 288 192 Q286 166 300 142 Z" fill="#c4641c"/>
+  <!-- cheek stripes -->
+  <path d="M90 270 Q118 266 140 276 Q118 284 92 284 Z" fill="#c4641c"/>
+  <path d="M96 304 Q120 298 140 304 Q120 314 98 316 Z" fill="#c4641c"/>
+  <path d="M422 270 Q394 266 372 276 Q394 284 420 284 Z" fill="#c4641c"/>
+  <path d="M416 304 Q392 298 372 304 Q392 314 414 316 Z" fill="#c4641c"/>
+  <!-- muzzle -->
+  <ellipse cx="256" cy="336" rx="80" ry="58" fill="#fbe0bd"/>
+  <!-- eyes -->
+  <ellipse cx="192" cy="262" rx="34" ry="38" fill="#ffffff"/>
+  <ellipse cx="320" cy="262" rx="34" ry="38" fill="#ffffff"/>
+  <ellipse cx="194" cy="266" rx="28" ry="32" fill="#4f95e0"/>
+  <ellipse cx="318" cy="266" rx="28" ry="32" fill="#4f95e0"/>
+  <ellipse cx="196" cy="270" rx="15" ry="22" fill="#1d1820"/>
+  <ellipse cx="316" cy="270" rx="15" ry="22" fill="#1d1820"/>
+  <circle cx="206" cy="252" r="9" fill="#ffffff"/>
+  <circle cx="326" cy="252" r="9" fill="#ffffff"/>
+  <circle cx="186" cy="284" r="4" fill="#ffffff" opacity=".8"/>
+  <circle cx="306" cy="284" r="4" fill="#ffffff" opacity=".8"/>
+  <!-- blush -->
+  <ellipse cx="150" cy="320" rx="22" ry="12" fill="#f39aa8" opacity=".55"/>
+  <ellipse cx="362" cy="320" rx="22" ry="12" fill="#f39aa8" opacity=".55"/>
+  <!-- nose + mouth -->
+  <path d="M242 314 Q256 306 270 314 Q264 326 256 330 Q248 326 242 314 Z" fill="#e8848f"/>
+  <path d="M256 330 L256 342 M256 342 Q244 356 230 346 M256 342 Q268 356 282 346" stroke="#7a3d2a" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <!-- whiskers -->
+  <g stroke="#fff6e8" stroke-width="5" stroke-linecap="round" opacity=".85">
+    <path d="M178 332 L110 322"/><path d="M180 346 L112 352"/>
+    <path d="M334 332 L402 322"/><path d="M332 346 L400 352"/>
+  </g>
+</svg>

@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:
 .title{pointer-events:auto;display:flex;gap:10px;align-items:center;background:rgba(20,22,32,.86);border:1px solid var(--line);border-radius:8px;padding:5px 12px 5px 6px}
 .title b{color:var(--gold);font-size:15px}
 .title span{color:var(--muted);font-size:12px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.logo canvas{width:28px;height:28px;image-rendering:pixelated;border-radius:6px;display:block}
+.logo img{width:28px;height:28px;border-radius:6px;display:block}
 .tools{position:absolute;right:14px;bottom:14px;display:flex;gap:6px}
 .tools button{font:500 12px var(--f-body);color:var(--text);background:rgba(20,22,32,.86);border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer}
 .tools button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
@@ -152,7 +152,6 @@ const CREW={
     items:["一張專輯導聆","編曲與和聲的聽點","相似風格推薦"]}
 };
 const ORDER=["ai","tech","news","books","music"];
-const LOGO=CREW.tech;
 
 /* ---------- pixel avatar (2D) ---------- */
 const FACE=[".kk..........kk.",".kfk........kfk.",".kfPkkkkkkkkPfk.",".kfffzffffzfffk.",".kffzffffffzffk.",".kffyyffffyyffk.",".kffyeffffeyffk.",".kffffffffffffk.",".kFfffcPPcfffFk.",".kfFFffffffFFfk.","..kffffffffffk..","...kkffffffkk...","..kvvvvaavvvvk..",".kvvvvvaavvvvvk.","kfvvvvvvvvvvvvfk"];
@@ -358,7 +357,7 @@ const ring=new THREE.Mesh(new THREE.RingGeometry(0.5,0.66,24),new THREE.MeshBasi
 ring.rotation.x=-Math.PI/2;ring.position.y=0.05;ring.visible=false;scene.add(ring);
 
 /* ---------- logo ---------- */
-document.getElementById("logo").appendChild(avatar(LOGO,"#2a2e40"));
+{const im=new Image();im.src="icon.png";im.alt="";document.getElementById("logo").appendChild(im)}
 
 /* ---------- panel ---------- */
 const crewEl=document.getElementById("crew"),homeEl=document.getElementById("home"),reportEl=document.getElementById("report");
