@@ -87,15 +87,22 @@ aside{background:var(--panel);border-left:1px solid var(--line);display:flex;fle
 .art p{margin:0 0 8px;font-size:13.5px;line-height:1.8;color:#d7dbe4;overflow-wrap:anywhere}
 .rsrc{font-size:12px;color:var(--muted)}.rsrc a{color:#9aa6c0;overflow-wrap:anywhere}
 .rsrc ul{margin:4px 0 0;padding-left:1.2em;display:grid;gap:2px}
-.reader{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
-.rbar{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:12px;background:rgba(10,11,17,.94);border-bottom:1px solid var(--line);padding-block:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.rbar span{font-size:12px;color:var(--muted);font-family:var(--f-mono);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rbody{max-width:680px;margin:0 auto;padding-top:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.rbody .atitle{font-size:24px}
+.reader{position:fixed;inset:0;z-index:20;background:rgba(3,4,8,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.rpanel{width:min(760px,100%);max-height:100%;overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.rbar{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:10px;background:rgba(15,17,24,.96);border-bottom:1px solid var(--line);padding:10px 14px}
+.rbar canvas{width:32px;height:32px;image-rendering:pixelated;border-radius:6px;flex:none}
+.rbar .who{min-width:0;flex:1}
+.rbar .who b{display:block;font-size:15px;color:var(--acc,var(--gold))}
+.rbar .who span{display:block;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rx{all:unset;cursor:pointer;flex:none;width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:18px}
+.rx:hover{color:var(--text)}.rx:focus-visible{outline:2px solid var(--gold)}
+.rbody{padding:18px 22px 28px;display:grid;gap:14px}
+.rbody .atitle{font-size:22px}
 .rbody .art{gap:16px}
-.rbody .art p,.rbody .rlist{font-size:16px;line-height:1.9}
-.rbody .art h4{font-size:16px;margin-top:10px}
+.rbody .art p,.rbody .rlist{font-size:15.5px;line-height:1.85}
+.rbody .art h4{font-size:15.5px;margin-top:8px}
 .rbody .rsum{font-size:15px}
+@media (max-width:640px){.reader{padding:0}.rpanel{width:100%;height:100%;max-height:none;border-radius:0;border:0}.rbar{padding-top:calc(10px + env(safe-area-inset-top,0px));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}.rbody{padding:16px max(16px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}}
 .note{margin:0;color:var(--muted);font-size:12.5px;line-height:1.7;padding:10px 12px;border:1px dashed var(--line);border-radius:8px}
 @media (max-width:860px){
   body{overflow:auto}
@@ -123,13 +130,13 @@ aside{background:var(--panel);border-left:1px solid var(--line);display:flex;fle
     <div class="sec" id="home">
       <h2>研究員 <small>5 席</small></h2>
       <div class="crew" id="crew"></div>
-      <div class="detail">點選貓咪或名單，看牠負責的研究主題。</div>
+      <div class="detail">點選貓咪或名單，打開牠今天的內容。</div>
     </div>
     <div class="report" id="report" hidden></div>
   </aside>
 </div>
 
-<div class="reader" id="reader" hidden role="dialog" aria-label="閱讀內容"><div class="rbar"><button class="back" id="rclose">← 回戰情室</button><span id="rwho"></span></div><div class="rbody" id="rbody"></div></div>
+<div class="reader" id="reader" hidden><div class="rpanel" role="dialog" aria-modal="true" aria-labelledby="rname"><div class="rbar"><span id="rav2"></span><div class="who"><b id="rname"></b><span id="rwho"></span></div><button class="rx" id="rclose" aria-label="關閉">×</button></div><div class="rbody" id="rbody"></div></div></div>
 
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
@@ -394,6 +401,7 @@ function highlight(k,fly){Object.entries(memberBtns).forEach(([kk,b])=>b.setAttr
   const cat=cats.find(x=>x.userData.key===k);ring.visible=!!cat;
   if(cat){const p=cat.getWorldPosition(new THREE.Vector3());ring.position.set(p.x,0.05,p.z);if(fly){focus.copy(p);focus.y=0.6;focusing=1}}}
 function select(k,fly){highlight(k,fly);openReport(k)}
+const reader=document.getElementById("reader"),rbody=document.getElementById("rbody");
 let byAgent={},repState="loading",openK=null,idxSig="";const docCache={},curDate={};
 const todayStr=()=>new Date().toLocaleDateString("sv-SE",{timeZone:"Asia/Taipei"});
 const WD="日一二三四五六";
@@ -402,35 +410,31 @@ const safeUrl=u=>/^https:\/\//.test(String(u||""))?u:null;
 const PAGES="https://nnilbig.github.io/studyingclub/";
 function refreshStatus(){ORDER.forEach(k=>{const c=CREW[k],el=memberBtns[k].querySelector(".st");if(!c.sched)return;const l=byAgent[k]||[];
   if(l.length&&l[0].date===todayStr()){el.textContent=`今日 ${l[0].time||""} 已交`;el.className="st"}else{el.textContent=c.sched.when+" 交稿";el.className="st off"}})}
-function closeReport(){openK=null;reportEl.hidden=true;homeEl.hidden=false;ring.visible=false;Object.values(memberBtns).forEach(b=>b.setAttribute("aria-pressed","false"))}
+function closeReport(){openK=null;reader.hidden=true;ring.visible=false;Object.values(memberBtns).forEach(b=>b.setAttribute("aria-pressed","false"))}
 function articleHTML(d){
   const src=(d.sources||[]).filter(x=>safeUrl(x.u));
   return `<article class="art">${d.tag?`<div class="atag">${esc(d.tag)}</div>`:""}<h3 class="atitle">${esc(d.title||"")}</h3>${d.summary?`<p class="rsum">${esc(d.summary)}</p>`:""}`+
     (d.sections||[]).map(x=>`<section>${x.h?`<h4>${esc(x.h)}</h4>`:""}${(x.p||[]).map(t=>`<p>${esc(t)}</p>`).join("")}${(x.list||[]).length?`<ul class="rlist">${x.list.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:""}</section>`).join("")+
     (src.length?`<div class="rsrc">資料來源<ul>${src.map(x=>`<li><a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t||x.u)}</a></li>`).join("")}</ul></div>`:"")+`</article>`}
 async function loadDoc(k,date){const key=date+"_"+k;if(docCache[key])return docCache[key];const r=await fetch(`reports/${date}/${k}.json?t=${Date.now()}`);if(!r.ok)throw new Error("http "+r.status);return docCache[key]=await r.json()}
-function openReport(k){openK=k;const c=CREW[k];homeEl.hidden=true;reportEl.hidden=false;reportEl.style.setProperty("--acc",c.col);
-  let h=`<div class="rhead"><button class="back" id="back">← 研究員</button><span id="rav"></span><div><b style="color:${c.col}">${esc(c.name)}</b><span>${esc(c.role)}</span></div></div>
-  ${c.sched?`<div class="sched"><div class="lbl2">排程</div><b>${esc(c.sched.name)}</b><div class="rmeta"><span class="chip ok">${esc(c.sched.when)}</span><span class="chip">同步寄到 ${esc(c.sched.out)}</span>${c.sched.near?`<span class="chip demo">主題相近</span>`:""}</div></div>`:`<div class="rmeta"><span class="chip">尚無排程</span><span class="chip demo">示例內容</span></div>`}`;
+function openReport(k){openK=k;const c=CREW[k];const wasOpen=!reader.hidden;reader.hidden=false;reader.style.setProperty("--acc",c.col);document.getElementById("rname").textContent=c.name;document.getElementById("rwho").textContent=c.role;document.getElementById("rav2").replaceChildren(avatar(c,"#23263a"));
+  let h=`${c.sched?`<div class="sched"><div class="lbl2">排程</div><b>${esc(c.sched.name)}</b><div class="rmeta"><span class="chip ok">${esc(c.sched.when)}</span><span class="chip">同步寄到 ${esc(c.sched.out)}</span>${c.sched.near?`<span class="chip demo">主題相近</span>`:""}</div></div>`:`<div class="rmeta"><span class="chip">尚無排程</span><span class="chip demo">示例內容</span></div>`}`;
   const l=byAgent[k]||[];let date=null;
   if(l.length){date=curDate[k]&&l.some(x=>x.date===curDate[k])?curDate[k]:l[0].date;const ent=l.find(x=>x.date===date);
-    h+=`<div class="rmeta">${l.length>1?`<select id="dsel" aria-label="選擇日期">${l.map(x=>`<option value="${esc(x.date)}"${x.date===date?" selected":""}>${esc(dateLabel(x.date))}</option>`).join("")}</select>`:`<span>${esc(dateLabel(date))}</span>`}${ent.time?`<span class="chip">${esc(ent.time)} 交稿</span>`:""}<button class="readbtn" id="readbtn">展開閱讀</button></div><div id="art"><p class="note">內容讀取中…</p></div>`;
+    h+=`<div class="rmeta">${l.length>1?`<select id="dsel" aria-label="選擇日期">${l.map(x=>`<option value="${esc(x.date)}"${x.date===date?" selected":""}>${esc(dateLabel(x.date))}</option>`).join("")}</select>`:`<span>${esc(dateLabel(date))}</span>`}${ent.time?`<span class="chip">${esc(ent.time)} 交稿</span>`:""}</div><div id="art"><p class="note">內容讀取中…</p></div>`;
   }else{
     const msg=repState==="loading"?"內容讀取中…":repState==="offline"?`這裡讀不到線上內容。請開 GitHub Pages 版閱讀：${PAGES}`:c.sched?`還沒有可閱讀的內容。下一份會在 ${c.sched.when} 送來，同時出現在這裡。`:"還沒有對應的排程。需要的話可以新增一個每天或每週的音樂賞析排程。";
     h+=`<p class="rsum">${esc(c.scope)}</p><div class="lbl">${c.sched?"每次內容":"研究議題（示例）"}</div><ul class="rlist">${c.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="note">${esc(msg)}</p>`}
-  reportEl.innerHTML=h;
-  document.getElementById("rav").replaceWith(avatar(c,"#23263a"));document.getElementById("back").onclick=closeReport;
+  rbody.innerHTML=h;if(!wasOpen){document.querySelector(".rpanel").scrollTop=0;document.getElementById("rclose").focus()}
+  
   const ds=document.getElementById("dsel");if(ds)ds.onchange=()=>{curDate[k]=ds.value;openReport(k)};
   if(date){const art=document.getElementById("art");
-    loadDoc(k,date).then(d=>{if(openK!==k||!art.isConnected)return;art.innerHTML=articleHTML(d);
-      document.getElementById("readbtn").onclick=()=>openReader(c,date,art.innerHTML)})
+    loadDoc(k,date).then(d=>{if(openK!==k||!art.isConnected)return;art.innerHTML=articleHTML(d)})
     .catch(()=>{if(art.isConnected)art.innerHTML=`<p class="note">這份內容暫時讀不到，請稍後重新整理。</p>`})}
 }
-const reader=document.getElementById("reader"),rbody=document.getElementById("rbody");
-function openReader(c,date,html){reader.style.setProperty("--acc",c.col);document.getElementById("rwho").textContent=`${c.name}・${c.role.split("・")[1]||""}・${dateLabel(date)}`;rbody.innerHTML=html;reader.hidden=false;reader.scrollTop=0;document.getElementById("rclose").focus()}
-function closeReader(){reader.hidden=true}
-document.getElementById("rclose").onclick=closeReader;
-addEventListener("keydown",e=>{if(e.key==="Escape"&&!reader.hidden)closeReader()});
+document.getElementById("rclose").onclick=closeReport;
+reader.addEventListener("click",e=>{if(e.target===reader)closeReport()});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!reader.hidden)closeReport()});
 async function loadIndex(){const r=await fetch(`reports/index.json?t=${Date.now()}`);if(!r.ok)throw new Error("http "+r.status);const idx=await r.json();
   const sig=JSON.stringify(idx.reports||[]);if(sig===idxSig&&repState==="ok")return;idxSig=sig;
   const next={};for(const e of idx.reports||[]){if(!e||!CREW[e.agent]||!/^\d{4}-\d{2}-\d{2}$/.test(e.date||""))continue;(next[e.agent]=next[e.agent]||[]).push(e)}
